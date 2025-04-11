@@ -38,7 +38,7 @@
     .series-item, .movie-item {
       cursor: pointer;
       transition: transform 0.3s;
-      position: relative; /* Added for Play Button positioning */
+      position: relative;
     }
     .series-item:hover, .movie-item:hover {
       transform: scale(1.05);
@@ -85,17 +85,18 @@
     .footer button:hover {
       background-color: #777;
     }
-    /* Added for Ad Banners */
+    /* Added for Custom Image Ad */
     .ad-banner {
       width: 100%;
       max-width: 728px;
-      height: 90px;
-      background-color: #444;
       margin: 10px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
+      text-align: center;
+    }
+    .ad-banner img {
+      width: 100%;
+      height: auto;
+      max-height: 90px;
+      object-fit: cover;
     }
     /* Added for Play Button */
     .play-button {
@@ -122,23 +123,33 @@
 <body>
   <div class="container">
     <!-- Added Header Ad -->
-    <div class="ad-banner">Header Advertisement (728x90)</div>
+    <div class="ad-banner">
+      <a href="https://example.com/ad1" target="_blank">
+        <img src="https://via.placeholder.com/728x90?text=Header+Ad" alt="Header Ad">
+      </a>
+    </div>
     <div class="header">Fenix</div>
 
-    <div class="section-title">All Series</div>
-    <div class="series-grid" id="series-grid">
-      <!-- Series items will be added dynamically -->
-    </div>
-    <div class="view-all">VIEW ALL</div>
-
-    <!-- Added Middle Ad -->
-    <div class="ad-banner">Middle Advertisement (728x90)</div>
-
+    <!-- Movies Section (Moved Above Series) -->
     <div class="section-title">Movies</div>
     <div class="movies-grid" id="movies-grid">
       <!-- Movie items will be added dynamically -->
     </div>
-    <div class="view-all">VIEW ALL</div>
+    <div class="view-all" onclick="viewAll('movies')">VIEW ALL</div>
+
+    <!-- Added Middle Ad -->
+    <div class="ad-banner">
+      <a href="https://example.com/ad2" target="_blank">
+        <img src="https://via.placeholder.com/728x90?text=Middle+Ad" alt="Middle Ad">
+      </a>
+    </div>
+
+    <!-- Series Section -->
+    <div class="section-title">All Series</div>
+    <div class="series-grid" id="series-grid">
+      <!-- Series items will be added dynamically -->
+    </div>
+    <div class="view-all" onclick="viewAll('series')">VIEW ALL</div>
   </div>
 
   <div class="footer">
@@ -148,92 +159,64 @@
   </div>
 
   <script>
-    // Fetch series and movies from Backend API
-    async function fetchContent() {
-      try {
-        const seriesResponse = await fetch('https://fenix-backend-iae6.onrender.com/series');
-        const moviesResponse = await fetch('https://fenix-backend-iae6.onrender.com/movies');
-        const seriesData = await seriesResponse.json();
-        const moviesData = await moviesResponse.json();
+    // Sample series data (Original)
+    const seriesData = [
+      { id: 1, title: "Love Story", image: "https://android.momoclips.com/images/21288_video_thumb.png", type: "series" },
+      { id: 2, title: "Love Story", image: "https://android.momoclips.com/images/21288_video_thumb.png", type: "series" },
+    ];
 
-        const seriesGrid = document.getElementById("series-grid");
-        const moviesGrid = document.getElementById("movies-grid");
+    // Sample movies data (Original)
+    const moviesData = [
+      { id: 3, title: "Gabbar Is Back (2015)", image: "https://i0.wp.com/bk.momoclips.com/wp-content/uploads/2025/03/1742448110-2490-dhIVF43jCqVzxuo11hYcHQxjzS6.jpg", type: "movie" },
+      { id: 4, title: "Kingdom of the Planet of the Apes (2024)", image: "https://i1.wp.com/bk.momoclips.com/wp-content/uploads/2025/03/1740989472-9116-gKkl37BQuKTanygYQG1pyYgLVgf.jpg", type: "movie" },
+    ];
 
-        // Dynamically add series to the grid
-        seriesData.forEach(series => {
-          const seriesItem = document.createElement("div");
-          seriesItem.className = "series-item";
-          seriesItem.innerHTML = `
-            <img src="${series.image}" alt="${series.title}">
-            <p>${series.title}</p>
-          `;
-          seriesItem.onclick = () => {
-            window.location.href = `episodes.html?contentId=${series.id}&type=${series.type}`;
-          };
-          seriesGrid.appendChild(seriesItem);
-        });
+    const seriesGrid = document.getElementById("series-grid");
+    const moviesGrid = document.getElementById("movies-grid");
 
-        // Dynamically add movies to the grid with Play Button
-        moviesData.forEach(movie => {
-          const movieItem = document.createElement("div");
-          movieItem.className = "movie-item";
-          movieItem.innerHTML = `
-            <img src="${movie.image}" alt="${movie.title}">
-            <button class="play-button"><i class="fas fa-play"></i></button>
-            <p>${movie.title}</p>
-          `;
-          movieItem.onclick = () => {
-            window.location.href = `episodes.html?contentId=${movie.id}&type=${movie.type}`;
-          };
-          moviesGrid.appendChild(movieItem);
-        });
-      } catch (error) {
-        console.error('Error fetching content:', error);
-        // Fallback to original sample data if API fails
-        const seriesData = [
-          { id: 1, title: "Love Story", image: "https://android.momoclips.com/images/21288_video_thumb.png", type: "series" },
-          { id: 2, title: "Love Story", image: "https://android.momoclips.com/images/21288_video_thumb.png", type: "series" },
-        ];
-        const moviesData = [
-          { id: 3, title: "Gabbar Is Back (2015)", image: "https://i0.wp.com/bk.momoclips.com/wp-content/uploads/2025/03/1742448110-2490-dhIVF43jCqVzxuo11hYcHQxjzS6.jpg", type: "movie" },
-          { id: 4, title: "Kingdom of the Planet of the Apes (2024)", image: "https://i1.wp.com/bk.momoclips.com/wp-content/uploads/2025/03/1740989472-9116-gKkl37BQuKTanygYQG1pyYgLVgf.jpg", type: "movie" },
-        ];
+    // Function to render content
+    function renderContent(type, data) {
+      const grid = type === 'series' ? seriesGrid : moviesGrid;
+      grid.innerHTML = '';
+      data.forEach(item => {
+        const itemEl = document.createElement("div");
+        itemEl.className = type === 'series' ? "series-item" : "movie-item";
+        itemEl.innerHTML = `
+          <img src="${item.image}" alt="${item.title}">
+          ${type === 'movies' ? '<button class="play-button"><i class="fas fa-play"></i></button>' : ''}
+          <p>${item.title}</p>
+        `;
+        itemEl.onclick = () => {
+          window.location.href = `episodes.html?contentId=${item.id}&type=${item.type}`;
+        };
+        grid.appendChild(itemEl);
+      });
+    }
 
-        const seriesGrid = document.getElementById("series-grid");
-        const moviesGrid = document.getElementById("movies-grid");
+    // Initial render
+    renderContent('series', seriesData);
+    renderContent('movies', moviesData);
 
-        seriesData.forEach(series => {
-          const seriesItem = document.createElement("div");
-          seriesItem.className = "series-item";
-          seriesItem.innerHTML = `
-            <img src="${series.image}" alt="${series.title}">
-            <p>${series.title}</p>
-          `;
-          seriesItem.onclick = () => {
-            window.location.href = `episodes.html?contentId=${series.id}&type=${series.type}`;
-          };
-          seriesGrid.appendChild(seriesItem);
-        });
-
-        moviesData.forEach(movie => {
-          const movieItem = document.createElement("div");
-          movieItem.className = "movie-item";
-          movieItem.innerHTML = `
-            <img src="${movie.image}" alt="${movie.title}">
-            <button class="play-button"><i class="fas fa-play"></i></button>
-            <p>${movie.title}</p>
-          `;
-          movieItem.onclick = () => {
-            window.location.href = `episodes.html?contentId=${movie.id}&type=${movie.type}`;
-          };
-          moviesGrid.appendChild(movieItem);
-        });
+    // View All function
+    function viewAll(type) {
+      if (type === 'series') {
+        moviesGrid.style.display = 'none';
+        document.querySelector('.section-title').textContent = 'All Series';
+        document.querySelectorAll('.section-title')[1].style.display = 'none';
+        document.querySelectorAll('.view-all')[0].style.display = 'none';
+        renderContent('series', seriesData);
+      } else {
+        seriesGrid.style.display = 'none';
+        document.querySelectorAll('.section-title')[0].textContent = 'All Movies';
+        document.querySelectorAll('.section-title')[1].style.display = 'none';
+        document.querySelectorAll('.view-all')[1].style.display = 'none';
+        renderContent('movies', moviesData);
       }
+      document.querySelector('.ad-banner:nth-of-type(2)').style.display = 'none'; // Hide middle ad
     }
 
     // Telegram WebApp initialization
     window.Telegram.WebApp.ready();
-    fetchContent();
   </script>
 </body>
 </html>
