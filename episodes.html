@@ -102,17 +102,18 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
-    /* Added for Ad Banner */
+    /* Added for Custom Image Ad */
     .ad-banner {
       width: 100%;
       max-width: 728px;
-      height: 90px;
-      background-color: #444;
       margin: 10px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
+      text-align: center;
+    }
+    .ad-banner img {
+      width: 100%;
+      height: auto;
+      max-height: 90px;
+      object-fit: cover;
     }
     /* Added for Description */
     .description {
@@ -143,13 +144,15 @@
       text-align: center;
       max-width: 80%;
     }
-    .popup-ad-content p {
-      font-size: 16px;
-      margin-bottom: 10px;
+    .popup-ad-content img {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
     }
     .countdown {
       font-size: 18px;
       color: #ffcc00;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -165,7 +168,11 @@
     </div>
 
     <!-- Added Ad Banner Below Player -->
-    <div class="ad-banner">Banner Advertisement (728x90)</div>
+    <div class="ad-banner">
+      <a href="https://example.com/ad3" target="_blank">
+        <img src="https://via.placeholder.com/728x90?text=Player+Ad" alt="Player Ad">
+      </a>
+    </div>
 
     <!-- Added Description -->
     <div class="description" id="content-description"></div>
@@ -181,7 +188,9 @@
   <!-- Added Pop-up Ad -->
   <div class="popup-ad" id="popup-ad">
     <div class="popup-ad-content">
-      <p>Advertisement</p>
+      <a href="https://example.com/ad4" target="_blank">
+        <img src="https://via.placeholder.com/300x250?text=Popup+Ad" alt="Popup Ad">
+      </a>
       <p class="countdown" id="countdown">5</p>
     </div>
   </div>
@@ -193,6 +202,38 @@
   </div>
 
   <script>
+    // Sample content data (Original)
+    const contentData = {
+      series: {
+        1: [
+          { title: "Episode 1", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%201.mp4" },
+          { title: "Episode 2", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%202.mp4" },
+          { title: "Episode 3", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%203.mp4" },
+          { title: "Episode 4", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%204.mp4" },
+          { title: "Episode 5", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%205.mp4" },
+          { title: "Episode 6", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%206.mp4" },
+          { title: "Episode 7", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%207.mp4" },
+          { title: "Episode 8", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%208.mp4" },
+        ],
+        2: [
+          { title: "Episode 1", url: "https://example.com/series2/ep1.mp4" },
+          { title: "Episode 2", url: "https://example.com/series2/ep2.mp4" },
+        ],
+      },
+      movies: {
+        3: [{ title: "Gabbar Is Back (2015)", url: "https://zawm1.zawgyiofficer.workers.dev/download.aspx?file=sLmlGGa7rHYAPzZmJBwkrx1%2BBtDI4vgyuIx%2BQYnRtkz2Oqbj6Vnd2XtaGizbCciS&expiry=own8sXacKHcQkvEQBlSatg%3D%3D&mac=658aefc121ca9b0ce8a7583f0f36174199d71a8a807bc816002714ead8db453b" }],
+        4: [{ title: "Kingdom of the Planet of the Apes (2024)", url: "https://zawm1.zawgyiofficer.workers.dev/download.aspx?file=j4EYpqHOLjm%2FF89ul83AqqZBz96ja6vYaTgJZZNVMzYTELhrHoXWd1V3F9wUcFpq&expiry=j39kKJne4rj4996uwL7fEA%3D%3D&mac=f2ebb8f223b26ba57bbf9df382beed053fb7cba3e002db934b11677690955e11" }],
+      },
+    };
+
+    // Sample content titles (Original)
+    const contentTitles = {
+      1: "Love Story",
+      2: "Love Story",
+      3: "Gabbar Is Back (2015)",
+      4: "Kingdom of the Planet of the Apes (2024)",
+    };
+
     // Initialize Plyr player with custom controls
     const player = new Plyr('#player', {
       controls: [
@@ -234,100 +275,52 @@
       }, 1000);
     }
 
-    // Fetch content data from Backend API
-    async function fetchContentData(contentId, type) {
-      try {
-        const response = await fetch(`https://fenix-backend-iae6.onrender.com/${type}s/${contentId}`);
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error('Error fetching content:', error);
-        // Fallback to original sample data
-        const contentData = {
-          series: {
-            1: [
-              { title: "Episode 1", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%201.mp4" },
-              { title: "Episode 2", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%202.mp4" },
-              { title: "Episode 3", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%203.mp4" },
-              { title: "Episode 4", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%204.mp4" },
-              { title: "Episode 5", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%205.mp4" },
-              { title: "Episode 6", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%206.mp4" },
-              { title: "Episode 7", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%207.mp4" },
-              { title: "Episode 8", url: "https://pub-99397c9d94874e8cb89e4486ce624c15.r2.dev/Flower/%E1%80%84%E1%80%9A%E1%80%BA%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%A5%E1%80%AE%E1%80%B8%E1%80%9B%E1%80%B2%E1%80%B7%20%E1%80%81%E1%80%BB%E1%80%85%E1%80%BA%E1%80%95%E1%80%AF%E1%80%B6%E1%80%95%E1%80%BC%E1%80%84%E1%80%BA%20EP%20-%208.mp4" },
-            ],
-            2: [
-              { title: "Episode 1", url: "https://example.com/series2/ep1.mp4" },
-              { title: "Episode 2", url: "https://example.com/series2/ep2.mp4" },
-            ],
-          },
-          movies: {
-            3: [{ title: "Gabbar Is Back (2015)", url: "https://zawm1.zawgyiofficer.workers.dev/download.aspx?file=sLmlGGa7rHYAPzZmJBwkrx1%2BBtDI4vgyuIx%2BQYnRtkz2Oqbj6Vnd2XtaGizbCciS&expiry=own8sXacKHcQkvEQBlSatg%3D%3D&mac=658aefc121ca9b0ce8a7583f0f36174199d71a8a807bc816002714ead8db453b" }],
-            4: [{ title: "Kingdom of the Planet of the Apes (2024)", url: "https://zawm1.zawgyiofficer.workers.dev/download.aspx?file=j4EYpqHOLjm%2FF89ul83AqqZBz96ja6vYaTgJZZNVMzYTELhrHoXWd1V3F9wUcFpq&expiry=j39kKJne4rj4996uwL7fEA%3D%3D&mac=f2ebb8f223b26ba57bbf9df382beed053fb7cba3e002db934b11677690955e11" }],
-          },
-        };
-        const contentTitles = {
-          1: "Love Story",
-          2: "Love Story",
-          3: "Gabbar Is Back (2015)",
-          4: "Kingdom of the Planet of the Apes (2024)",
-        };
-        return {
-          data: contentData[type + 's'][contentId],
-          title: contentTitles[contentId] || "Unknown Content",
-          description: "This is a fallback description for " + (contentTitles[contentId] || "Unknown Content"),
-        };
-      }
-    }
-
     // Get content ID and type from URL
     const urlParams = new URLSearchParams(window.location.search);
     const contentId = urlParams.get("contentId");
     const type = urlParams.get("type");
 
     // Set content title and description
-    async function loadContent() {
-      const content = await fetchContentData(contentId, type);
-      document.getElementById("content-title").textContent = content.title;
-      document.getElementById("content-description").textContent = content.description || "No description available.";
+    document.getElementById("content-title").textContent = contentTitles[contentId] || "Unknown Content";
+    document.getElementById("content-description").textContent = `This is a description for ${contentTitles[contentId] || "Unknown Content"}.`;
 
-      const data = content.data;
-      const episodeList = document.getElementById("episode-list");
-      const episodeGrid = document.getElementById("episode-grid");
-      const videoSource = document.getElementById("videoSource");
+    // Get episode list or movie
+    const data = type === "series" ? contentData.series[contentId] : contentData.movies[contentId];
+    const episodeList = document.getElementById("episode-list");
+    const episodeGrid = document.getElementById("episode-grid");
+    const videoSource = document.getElementById("videoSource");
 
-      if (type === "movie") {
-        episodeList.style.display = "none";
-        showPopupAd(() => {
-          videoSource.src = data[0].url;
-          player.source = {
-            type: 'video',
-            sources: [{ src: data[0].url, type: 'video/mp4' }],
-          };
-          player.play();
-        });
-      } else {
-        data.forEach(episode => {
-          const episodeItem = document.createElement("div");
-          episodeItem.className = "episode-item";
-          episodeItem.innerHTML = `<p>${episode.title}</p>`;
-          episodeItem.onclick = () => {
-            showPopupAd(() => {
-              videoSource.src = episode.url;
-              player.source = {
-                type: 'video',
-                sources: [{ src: episode.url, type: 'video/mp4' }],
-              };
-              player.play();
-            });
-          };
-          episodeGrid.appendChild(episodeItem);
-        });
-      }
+    if (type === "movie") {
+      episodeList.style.display = "none";
+      showPopupAd(() => {
+        videoSource.src = data[0].url;
+        player.source = {
+          type: 'video',
+          sources: [{ src: data[0].url, type: 'video/mp4' }],
+        };
+        player.play();
+      });
+    } else {
+      data.forEach(episode => {
+        const episodeItem = document.createElement("div");
+        episodeItem.className = "episode-item";
+        episodeItem.innerHTML = `<p>${episode.title}</p>`;
+        episodeItem.onclick = () => {
+          showPopupAd(() => {
+            videoSource.src = episode.url;
+            player.source = {
+              type: 'video',
+              sources: [{ src: episode.url, type: 'video/mp4' }],
+            };
+            player.play();
+          });
+        };
+        episodeGrid.appendChild(episodeItem);
+      });
     }
 
     // Telegram WebApp initialization
     window.Telegram.WebApp.ready();
-    loadContent();
   </script>
 </body>
 </html>
